@@ -1,0 +1,172 @@
+= Responsabilidades de equipes no desenvolvimento de aplicativos integrados ao Keycloak
+{localdatetime}
+:toc: macro
+:toc-title: Conteúdo
+:icons: font
+:numbered:
+
+:Keycloak: Keycloak
+:RH-SSO: RH-SSO
+:Docker: Docker
+:DockerCompose: Docker Compose
+:OpenShift: OpenShift
+:Angular: Angular
+:React: React
+:SpringBoot: Spring Boot
+:Quarkus: Quarkus
+
+:equipe-de-arquitetura: <<equipe-de-arquitetura,equipe de arquitetura>>
+
+*[red]#DOCUMENTO EM DESENVOLVIMENTO#*! +
+Neste documento *[red]#eu, Paulo Jerônimo, compartilho um pouco sobre
+IDÉIAS E OPINIÕES PESSOAIS sobre as responsabilidades de equipes que
+precisam atuar no desenvolvimento ou na implantação de aplicativos que
+precisam estar integradas a um {Keycloak} (ou a um {RH-SSO})#*.
+Eu apresento, aqui, um pouco da visão de trabalho que adquiri ao ter
+passado por alguns projetos, em médias ou grandes empresas, onde o
+Keycloak é parte de sua infraestrutura.
+*A intenção básica deste documento é apenas fomentar uma discussão
+com quaisquer interessados sobre esse assunto*.
+
+.Aviso legal (_Disclaimer_):
+WARNING: Este documento não nomeia, cita detalhes, ou expõe questões
+específicas a nenhum dos projetos pelos quais já passei.
+
+toc::[]
+
+== Antes de começar: Keycloak ou RH-SSO?
+
+[[equipe-de-arquitetura]]
+== Papel da equipe de arquitetura
+
+Do lado de uma equipe de arquitetura, creio um dos papéis dessa equipe
+seria o de fornecer exemplos e demonstrações funcionais sobre como os
+mais diversos tipos de aplicativos deveriam ser integrados ao
+{Keycloak}.
+
+Isso inclui demonstrações de como usar tecnologias de front-end (como
+{Angular}, {React}, etc) ou back-end (como {SpringBoot}, {Quarkus}, etc)
+integradas ao Keycloak observando-se os padrões e a infraestrutura
+utilizadas pela empresa para a qual trabalha essa equipe.
+
+A equipe de arquitetura também deveria atuar no Keycloak em questões
+como:
+
+. Definição de versões que podem ser utilizadas.
+. Integrações do Keycloak a outros produtos.
+. Customizações diversas (ex: criação de temas e fluxos específicos).
+. Definições de _Realms_.
+. Definições de _Roles_ corporativas.
+. ...
+
+[[equipe-de-devops]]
+== Papel da equipe de DevOps (e/ou ALM)
+
+O papel dessa equipe deveria ser o de, a partir de definições
+arquiteturais elaboradas pela {equipe-de-arquitetura}, oferecer
+visibilidade, e exemplos práticos e integrados a <<ferramentas-para-alm,
+ferramentas para ALM>>, sobre como os aplicativos deveriam ser
+implantados de forma integrada ao Keycloak.
+
+Essa equipe deveria fornecer documentos (e scripts ou exemplos de
+código) que demonstrassem, de forma rápida e simples, como um novo
+projeto de desenvolvimento poderia ser implantado na infraestrutura
+da empresa.
+Como um exemplo, esses documentos (ou scripts) deveriam apresentar como
+o Keycloak poderia ser integrado a um {OpenShift} (se esse fosse
+utilizado).
+
+Nessa última situação eu creio que, além de exemplos de soluções
+integradas ao OpenShift, também deveriam ser oferecidas alternativas
+para que a construção de aplicativos pudesse ser realizada de forma
+contêinerizada, dependendo apenas do {Docker} (e/ou do {DockerCompose})
+de forma que um aplicativo pudesse ser prototipado e iniciado,
+rapidamente, em ambiente de desenvolvimento, sem a dependência de uma
+infraestrutura tão complexa quanto o OpenShift.
+
+Eu já passei por esse tipo de problema onde, ao fazer o setup de
+um projeto utilizando o Angular 10, notei depois que a equipe de DevOps
+da empresa queria um direcionamento para o uso do OpenShift. Mas, como
+disse, o desenvolvimento de um contêiner é algo bem mais simples de
+ser gerenciado (se o desenvolvedor já possui alguma experência em
+Docker, como no meu caso). Dessa forma, eu considero que uma
+independência do OpenShift, em ambiente de desenvolvimento, possa ser
+muito útil para que uma aplicação seja iniciada e construída de uma
+forma bem rápida.
+
+[[equipe-de-desenvolvimento]]
+== Papel do líder de uma equipe de desenvolvimento
+
+Imagine a situação em que você é o líder de desenvolvimento de um
+aplicativo que precisa ser integrado a um Keycloak implantando em um
+cliente.
+
+Como líder de uma equipe desenvolvendo um aplicativo para esse cliente
+eu gostaria de receber, dele, documentos que me oferecessem detalhes
+sobre como acesso o seu Keycloak.
+Esses documentos deveriam me direcionar o desenvolvimento de forma que
+eu pudesse colocar o aplicativo em homologação no ambiente desse cliente
+da forma mais rápida possível.
+
+Atuando nesse papel, eu gostaria de ser capaz de implantar o aplicativo
+remotamente no cliente contando apenas com o auxílio de sua equipe de
+DevOps.
+E eu gostaria de ser capaz de implantar a aplicação nos ambientes
+de desenvolvimento ao ambiente de homologação do cliente, de forma
+automatizada e independente.
+
+Eu não deveria ter o poder para implantar a aplicação em produção já que
+essa deve ser uma atividade exclusiva de uma <<equipe-de-producao,equipe
+de produção>> do cliente.
+Mas, observando que eu já teria meios automatizados para implantar o
+aplicativo até o ambiente de homologação, eu esperaria que essa equipe
+fosse responsável por isso, de forma rápida e segura, apenas
+através da configuração de algumas variáveis que seriam gerenciadas, e
+visíveis, somente pela equipe de produção.
+
+Como líder do desenvolvimento do aplicativo eu gostaria que o meu
+desenvolvimento local, pelo menos em fases iniciais (e se possível até
+a fase de homologação), não ficasse amarrado a uma infraestrutura do
+cliente.
+
+Eu digo isso pelo seguinte: eu poderia ser um empresa desenvolvedora
+que, de forma totalmente independente e desacoplada, trabalha em seu
+próprio ambiente observando, para isso, apenas algumas diretrizes
+básicas de desenvolvimento especificadas pelo cliente.
+
+Nessa situação, o ideal seria que o cliente me fornecesse um documento
+dizendo que softwares são homologados em seu ambiente para que eu possa,
+utilizando o meu próprio ambiente, fazer a construção local do
+aplicativo.
+
+Pelo fato do Keycloak ser um _Identity Manager_ de fácil instalação que
+pode usufruir de um contêiner (homogêneo) executável em diferentes
+ambientes, eu esperaria apenas que houvesse uma maneira rápida, mínima e
+simples, de se fazer um setup do mesmo de forma a atender um conjunto de
+configurações básicas necessárias a um ambiente próximo (em termos de
+configuração) ao do cliente.
+
+Pelo lado do desenvolvimento de um aplicativo, seria interessante (diria
+que necessário) que um script de configuração do Keycloak fosse criado,
+e que pudesse ser executável pelo cliente, em seu ambiente, com mínimas
+configurações para isso.
+
+Partindo da arquitetura deveriam ser oferecidas informações relativas
+aos _Realms_ e configurações específicas utilizados até o ambiente de
+homologação de forma que os scripts do aplicativo pudessem ser adaptados
+a essa configuração básica do cliente.
+
+[[equipe-de-seguranca]]
+== Papel da equipe de segurança
+
+[[equipe-de-producao]]
+== Papel da equipe de produção
+
+[[equipe-de-monitoracao]]
+== Papel da equipe de monitoramento
+
+[[referencias]]
+== Referências
+
+[[ferramentas-para-alm]]
+=== Ferramentas para ALM
